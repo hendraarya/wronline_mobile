@@ -1,14 +1,155 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, StyleSheet, Text, TouchableOpacity, Platform, ScrollView } from "react-native";
+import { Card, Title, DataTable, Divider, Searchbar, AnimatedFAB } from 'react-native-paper';
+import { MenuHeader } from "../components/MenuHeader";
+import { MenuFooter } from "../components/MenuFooter";
+import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function RequestWrScreen() {
+const wronline = [
+    {
+        wrid: 'WR220818-01',
+        machine_no: 'HP-123-ID',
+        date: '2022-03-10',
+        time: '10:02:01',
+        problem: 'Mold Abnormal',
+        priority: 'Prioroty 1',
+        status: 'Received'
+    },
+    {
+        wrid: 'WR220818-02',
+        machine_no: 'HP-124-ID',
+        date: '2022-03-10',
+        time: '10:02:01',
+        problem: 'Mold Abnormal',
+        priority: 'Prioroty 1',
+        status: ''
+    },
+    {
+        wrid: 'WR220818-03',
+        machine_no: 'HP-125-ID',
+        date: '2022-03-11',
+        time: '12:02:01',
+        problem: 'Emergency',
+        priority: 'Prioroty 2',
+        status: 'Received'
+    },
+    {
+        wrid: 'WR220818-04',
+        machine_no: 'HP-127-ID',
+        date: '2022-03-17',
+        time: '12:02:01',
+        problem: 'Broken',
+        priority: 'Prioroty 3',
+        status: 'Received'
+    },
+    {
+        wrid: 'WR220818-05',
+        machine_no: 'HP-129-ID',
+        date: '2022-03-19',
+        time: '15:02:01',
+        problem: 'Emergency',
+        priority: 'Prioroty 1',
+        status: 'Received'
+    },
+
+
+    // more users here
+];
+
+const optionsPerPage = [2, 3, 4];
+
+export default function RequestWrScreen({ animatedValue,
+    visible,
+    extended,
+    label,
+    animateFrom,
+    style,
+    iconMode, }: any) {
+    const [page, setPage] = React.useState<number>(0);
+    const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
+
+    const [searchQuery, setSearchQuery] = React.useState('');
+
+    const onChangeSearch = (query: any) => setSearchQuery(query);
+
+
+    const [isExtended, setIsExtended] = React.useState(true);
+
+    const isIOS = Platform.OS === 'ios';
+
+    const onScroll = ({ nativeEvent }: any) => {
+        const currentScrollPosition =
+            Math.floor(nativeEvent?.contentOffset?.y) ?? 0;
+
+        setIsExtended(currentScrollPosition <= 0);
+    };
+
+    const fabStyle = { [animateFrom]: 16 };
+
+    React.useEffect(() => {
+        setPage(0);
+    }, [itemsPerPage]);
+
     return (
         <View style={styles.container}>
-            <View style={styles.header}></View>
-            <View style={styles.content}></View>
-            <View style={styles.footer}>
+            <View style={styles.header}>
+                <MenuHeader />
+            </View>
+            <View style={styles.content}>
+                <View>
+                    <Card>
+                        <Card.Content style={{ margin: 5, backgroundColor: '#f8f8ed', borderRadius: 10 }}>
+                            <Title style={{ textAlign: 'center', color: '#08737f', fontStyle: 'italic' }}> WR ONLINE STATUS </Title>
+                            <Divider />
+                            <View style={{}}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
+                                    <Text style={{ fontWeight: 'bold', color: '#08737f' }}>Total WR Online Today</Text>
+                                    <Text style={{ fontWeight: 'bold', color: '#08737f', fontSize: 16 }}>40</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
+                                    <Text style={{ fontWeight: 'bold', color: '#08737f' }}>Total All WR Online</Text>
+                                    <Text style={{ fontWeight: 'bold', color: '#08737f', fontSize: 16 }}>2000</Text>
+                                </View>
+                            </View>
+                        </Card.Content>
+                    </Card>
+                </View>
+                <Divider />
 
+                <Searchbar
+                    placeholder="Search"
+                    onChangeText={onChangeSearch}
+                    value={searchQuery}
+                />
+                <ScrollView>
+                    {
+                        wronline.map((value, index) => {
+                            return (
+                                <View key={index}>
+                                    <Text>{value.wrid}</Text>
+                                </View>
+                            );
+                        })
+                    }
+                    <View>
+
+                    </View>
+                </ScrollView>
+
+                <AnimatedFAB
+                    icon={'plus'}
+                    label={'Input WR Online'}
+                    extended={isExtended}
+                    onPress={() => console.log('Pressed')}
+                    visible={visible}
+                    animateFrom={'right'}
+                    iconMode={'static'}
+                    style={[styles.fabStyle, style, fabStyle]}
+                />
+
+            </View>
+            <View style={styles.footer}>
+                <MenuFooter color1='white' color2='#92dc7e' style1={{ color: 'white' }} style2={{ color: '#92dc7e' }} />
             </View>
 
         </View>
@@ -22,14 +163,22 @@ const styles = StyleSheet.create({
     },
     header: {
         flex: 0.1,
-        backgroundColor: 'green',
+        backgroundColor: '#4c9ba5',
     },
     content: {
         flex: 1,
-        backgroundColor: 'red',
+        backgroundColor: '#fefefe',
     },
     footer: {
         flex: 0.1,
-        backgroundColor: 'yellow',
-    }
+        backgroundColor: '#4c9ba5',
+    },
+    fabStyle: {
+        bottom: 16,
+        right: 16,
+        position: 'absolute',
+    },
+    datatable1: {
+        fontSize: 5,
+    },
 });

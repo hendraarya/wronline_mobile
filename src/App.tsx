@@ -9,6 +9,7 @@ import AuthStackNavigator from './navigators/AuthStackNavigator';
 import Splashscreen from './pages/Splashscreen';
 import LoginScreen from './pages/LoginScreen';
 import RequestWrScreen from './pages/RequestWrScreen';
+import MyComponent from './pages/fabstyle';
 
 
 const RootStack = createNativeStackNavigator();
@@ -28,8 +29,9 @@ export default function App() {
 
     // </View>
     // <Splashscreen />
-    <LoginScreen />
-    // <RequestWrScreen />
+    // <LoginScreen />
+    <RequestWrScreen />
+    // <MyComponent />
 
 
   );
