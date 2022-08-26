@@ -1,9 +1,12 @@
 import React from "react";
-import { TextInput, StyleSheet } from "react-native";
+import { TextInput, StyleSheet, View } from "react-native";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function Input({ style, ...props }: any) {
     return (
-        <TextInput {...props} style={[style, styles.columnBox]} />
+        <View>
+            <TextInput {...props} style={[style, styles.columnBox]} />
+        </View>
     );
 }
 
@@ -13,5 +16,7 @@ const styles = StyleSheet.create({
         width: '100%',
         padding: 20,
         borderRadius: 8,
+        margin: 10,
+        // textDecorationLine: 'underline'
     }
 });

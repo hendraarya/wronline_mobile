@@ -5,6 +5,13 @@ import { MenuHeader } from "../components/MenuHeader";
 import { MenuFooter } from "../components/MenuFooter";
 import Icon from 'react-native-vector-icons/Ionicons';
 
+//Create Main Container
+import MainContainer from "../components/MainContainer";
+import MainHeader from "../components/MainHeader";
+import MainContent from "../components/MainContent";
+import MainFooter from "../components/MainFooter";
+
+
 const wronline = [
     {
         wrid: 'WR220818-01',
@@ -56,6 +63,16 @@ const wronline = [
     // more users here
 ];
 
+let finalObj: any = {}
+wronline.forEach((games) => {
+    const date = games.date.split('T')[0]
+    if (finalObj[date]) {
+        finalObj[date].push(games);
+    } else {
+        finalObj[date] = [games];
+    }
+})
+
 const optionsPerPage = [2, 3, 4];
 
 export default function RequestWrScreen({ animatedValue,
@@ -91,11 +108,11 @@ export default function RequestWrScreen({ animatedValue,
     }, [itemsPerPage]);
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
+        <MainContainer>
+            <MainHeader>
                 <MenuHeader />
-            </View>
-            <View style={styles.content}>
+            </MainHeader>
+            <MainContent>
                 <View>
                     <Card>
                         <Card.Content style={{ margin: 5, backgroundColor: '#f8f8ed', borderRadius: 10 }}>
@@ -123,6 +140,7 @@ export default function RequestWrScreen({ animatedValue,
                 />
                 <ScrollView>
                     {
+
                         wronline.map((value, index) => {
                             return (
                                 <View key={index}>
@@ -130,6 +148,7 @@ export default function RequestWrScreen({ animatedValue,
                                 </View>
                             );
                         })
+
                     }
                     <View>
 
@@ -147,32 +166,16 @@ export default function RequestWrScreen({ animatedValue,
                     style={[styles.fabStyle, style, fabStyle]}
                 />
 
-            </View>
-            <View style={styles.footer}>
-                <MenuFooter color1='white' color2='#92dc7e' style1={{ color: 'white' }} style2={{ color: '#92dc7e' }} />
-            </View>
+            </MainContent>
 
-        </View>
+            <MainFooter>
+                <MenuFooter color1='white' color2='#92dc7e' style1={{ color: 'white' }} style2={{ color: '#92dc7e' }} />
+            </MainFooter>
+        </MainContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#cdd8d4'
-    },
-    header: {
-        flex: 0.1,
-        backgroundColor: '#4c9ba5',
-    },
-    content: {
-        flex: 1,
-        backgroundColor: '#fefefe',
-    },
-    footer: {
-        flex: 0.1,
-        backgroundColor: '#4c9ba5',
-    },
     fabStyle: {
         bottom: 16,
         right: 16,

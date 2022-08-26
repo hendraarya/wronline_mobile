@@ -10,6 +10,9 @@ import Splashscreen from './pages/Splashscreen';
 import LoginScreen from './pages/LoginScreen';
 import RequestWrScreen from './pages/RequestWrScreen';
 import MyComponent from './pages/fabstyle';
+import { InputWrScreen } from './pages/InputWrScreen';
+import MainContainer from './components/MainContainer';
+import BarcodeScanner from './components/QRcodescanner';
 
 
 const RootStack = createNativeStackNavigator();
@@ -30,8 +33,10 @@ export default function App() {
     // </View>
     // <Splashscreen />
     // <LoginScreen />
-    <RequestWrScreen />
+    // <RequestWrScreen />
     // <MyComponent />
+    <InputWrScreen />
+    // <BarcodeScanner />
 
 
   );
