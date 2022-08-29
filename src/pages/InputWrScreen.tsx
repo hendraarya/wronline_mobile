@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Text, StyleSheet, TouchableOpacity, View, Button, Pressable, Alert } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, View } from 'react-native';
 import moment from "moment";
-import { RadioButton } from "react-native-paper";
+import { RadioButton, TextInput, Divider, Dialog, Portal, Provider, Button } from "react-native-paper";
 import Icon from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker'
 import { FilledButton } from "../components/FilledButton";
-import Input from "../components/Input";
+
 
 //Create Container 
 import MainContainer from "../components/MainContainer";
@@ -20,12 +20,22 @@ import { RNCamera } from 'react-native-camera';
 
 
 export function InputWrScreen() {
-    const [date, setDate] = useState(new Date())
-    const [opendate, setOpendate] = useState(false)
-    const [time, setTime] = useState(new Date())
-    const [opentime, setOpentime] = useState(false)
-
-    const [value, setValue] = React.useState('first');
+    // Variable for get data sending Request WR Online
+    const [nik, setNik] = useState('');
+    const [machineid, setMachineId] = useState('');
+    const [date, setDate] = useState(new Date());
+    const [opendate, setOpendate] = useState(false);
+    const [time, setTime] = useState(new Date());
+    const [opentime, setOpentime] = useState(false);
+    const [problem, setProblem] = useState('');
+    const [valueproblem, setValueProblem] = React.useState('');
+    const [visibleproblem, setVisibleProblem] = React.useState(false);
+    const showDialog = () => setVisibleProblem(true);
+    const hideDialog = () => setVisibleProblem(false);
+    const [valueurgency, setValueUrgency] = React.useState('');
+    const [visibleurgency, setVisibleUrgency] = React.useState(false);
+    const showDialogUrgency = () => setVisibleUrgency(true);
+    const hideDialogUrgency = () => setVisibleUrgency(false);
 
 
     // useEffect(() => {
@@ -44,32 +54,81 @@ export function InputWrScreen() {
                 </View>
             </MainHeader>
             <MainContent>
-
-                <View style={styles.maincontent}>
-                    <Text>NIK</Text>
-                    <Input style={{ width: 10 }} placeholder="Input NIK" />
-                    <Input placeholder="Input Machine ID" editable={false} />
-                    <TouchableOpacity onPress={() => setOpendate(true)}>
-                        <Input placeholder="Input Failure Date" editable={false}
-                            pointerEvents="none" value={moment(date).format('YYYY-MM-DD')} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setOpentime(true)}>
-                        <Input placeholder="InputFailure Time" editable={false}
-                            pointerEvents="none" value={moment(time).format('HH:mm:ss')} />
-                    </TouchableOpacity>
-                    <Input placeholder="Problem" editable={true} />
-                    <Text>Type Problem</Text>
-                    <View>
-
-                        <RadioButton.Group onValueChange={value => setValue(value)} value={value}>
-                            <RadioButton.Item label="Emergency Stop" value="Emergency Stop" />
-                            <RadioButton.Item label="Machine Mulfunction" value="Machine Mulfunctionsecond" />
-                            <RadioButton.Item label="Plan" value="Plan" />
-                            <RadioButton.Item label="Other" value="Other" />
-                        </RadioButton.Group>
-                    </View>
-
+                <View style={{ flexDirection: 'row', margin: 30 }}>
+                    <TextInput mode="flat" label="NIK" style={{ width: '40%' }} left={<TextInput.Icon icon="sticker-text-outline" value={nik} onChangeText={(value: any) => setNik(value)} />} />
+                    <TextInput
+                        label="Machine ID"
+                        left={<TextInput.Icon icon="factory" />}
+                        style={{ width: '60%', marginLeft: 10 }}
+                        value={machineid} onChangeText={(value: any) => setMachineId(value)}
+                    />
                 </View>
+                <Divider />
+                <View style={{ flexDirection: 'row', margin: 30 }}>
+                    <TouchableOpacity onPress={() => setOpendate(true)} style={{ width: '50%' }} >
+                        <TextInput mode="flat" label="Failure Date" left={<TextInput.Icon icon="calendar-range" />} editable={false} pointerEvents="none" value={moment(date).format('YYYY-MM-DD')} onChangeText={(value: any) => setDate(value)} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setOpentime(true)} style={{ width: '50%', marginLeft: 10 }} >
+                        <TextInput
+                            label="Failure Time"
+                            left={<TextInput.Icon icon="clock-outline" />}
+                            editable={false} pointerEvents="none" value={moment(time).format('HH:mm:ss')} onChangeText={(value: any) => setTime(value)}
+                        />
+                    </TouchableOpacity>
+                </View >
+                <Divider />
+                <View style={{ flexDirection: 'row', margin: 30 }}>
+                    <TextInput mode="flat" label="Problem" style={{ width: '100%' }} left={<TextInput.Icon icon="alert-circle-outline" />} value={problem} onChangeText={(value: any) => setProblem(value)} />
+                </View>
+                <Divider />
+                <Provider>
+                    <View style={{ margin: 30, width: '85%' }}>
+                        <TouchableOpacity onPress={showDialog} >
+                            <TextInput mode="flat" label="Type Problem" style={{ width: '100%' }} left={<TextInput.Icon icon="tools" />} editable={false} value={valueproblem} onChangeText={(value: any) => setValueProblem(value)} />
+                        </TouchableOpacity>
+                        <Portal>
+                            <Dialog visible={visibleproblem} onDismiss={hideDialog}>
+                                <Dialog.Title>Type Problem</Dialog.Title>
+                                <Dialog.Content>
+                                    <RadioButton.Group onValueChange={value => setValueProblem(value)} value={valueproblem}>
+                                        <RadioButton.Item label="Emergency Stop" value="Emergency Stop" />
+                                        <RadioButton.Item label="Machine Mulfunction" value="Machine Mulfunction" />
+                                        <RadioButton.Item label="Plan" value="Plan" />
+                                        <RadioButton.Item label="Other" value="Other" />
+                                    </RadioButton.Group>
+                                </Dialog.Content>
+                                <Dialog.Actions>
+                                    <Button onPress={hideDialog}>Done</Button>
+                                </Dialog.Actions>
+                            </Dialog>
+                        </Portal>
+                    </View>
+                </Provider>
+                <Divider />
+                <Provider>
+                    <View style={{ margin: 30, width: '85%' }}>
+                        <TouchableOpacity onPress={showDialogUrgency} >
+                            <TextInput mode="flat" label="Type Urgency" style={{ width: '100%' }} left={<TextInput.Icon icon="tools" />} editable={false} value={valueurgency} onChangeText={(value: any) => setValueUrgency(value)} />
+                        </TouchableOpacity>
+                        <Portal>
+                            <Dialog visible={visibleurgency} onDismiss={hideDialogUrgency}>
+                                <Dialog.Title>Type Urgency</Dialog.Title>
+                                <Dialog.Content>
+                                    <RadioButton.Group onValueChange={value => setValueUrgency(value)} value={valueurgency}>
+                                        <RadioButton.Item label="Safety" value="Safety" />
+                                        <RadioButton.Item label="Quality" value="Quality" />
+                                        <RadioButton.Item label="Audit" value="Audit" />
+                                        <RadioButton.Item label="Item Urgent" value="Item Urgent" />
+                                    </RadioButton.Group>
+                                </Dialog.Content>
+                                <Dialog.Actions>
+                                    <Button onPress={hideDialogUrgency}>Done</Button>
+                                </Dialog.Actions>
+                            </Dialog>
+                        </Portal>
+                    </View>
+                </Provider>
+
                 <DatePicker
                     androidVariant="iosClone"
                     locale="en"
@@ -126,8 +185,9 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     },
     maincontent: {
-        width: '90%',
+        width: '100%',
         margin: 10,
+        backgroundColor: 'red'
     },
     text: {
         fontSize: 18,
@@ -141,5 +201,8 @@ const styles = StyleSheet.create({
         marginTop: 2,
         width: '90%',
         borderRadius: 40
+    },
+    textnik: {
+        width: '40%'
     }
 })
