@@ -24,7 +24,7 @@ import { RNCamera } from 'react-native-camera';
 
 
 
-export function InputWrScreen({ navigation }: any) {
+export function AxiosScreen() {
     // Variable for get data sending Request WR Online
     const [nik, setNik] = useState('');
     const [machineid, setMachineId] = useState('');
@@ -68,53 +68,12 @@ export function InputWrScreen({ navigation }: any) {
             });
     }
 
-    type User = {
-        id: number,
-        name: string,
-        email: string,
-
+    const getData = () => {
+        axios.get('http://10.202.10.42:3000/api/mesin').then(res => {
+            console.log('res get data:', res.data);
+            setUsers(res.data);
+        });
     };
-
-    type GetUsersResponse = {
-        data: User[];
-    };
-
-    async function getData() {
-        try {
-            // 👇️ const data: GetUsersResponse
-            const { data, status } = await axios.get<GetUsersResponse>(
-                'http://10.202.10.42:3000/api/mesin',
-                {
-                    headers: {
-                        Accept: 'application/json',
-                    },
-                },
-            );
-
-            console.log(JSON.stringify(data, null, 4));
-            setUsers(data)
-
-            // 👇️ "response status is: 200"
-            console.log('response status is: ', status);
-
-            return data;
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log('error message: ', error.message);
-                return error.message;
-            } else {
-                console.log('unexpected error: ', error);
-                return 'An unexpected error occurred';
-            }
-        }
-    }
-
-    // const getData = () => {
-    //     axios.get('http://10.202.10.42:3000/api/mesin').then(res => {
-    //         console.log('res get data:', res.data);
-    //         setUsers(res.data);
-    //     });
-    // };
 
 
     const wronline = [
@@ -150,36 +109,36 @@ export function InputWrScreen({ navigation }: any) {
             </MainHeader>
             <MainContent>
                 <View style={{ flexDirection: 'row', margin: 30 }}>
-                    <TextInput mode="flat" label="NIK" style={{ width: '40%' }} left={<TextInput.Icon icon="sticker-text-outline" value={nik} onChangeText={(value: any) => setNik(value)} />} />
+                    <TextInput mode="flat" label="NIK" style={{ width: '40%' }} left={<TextInput.Icon icon="sticker-text-outline" value={nik} onChangeText={value => setNik(value)} />} />
                     <TextInput
                         label="Machine ID"
                         left={<TextInput.Icon icon="factory" />}
                         style={{ width: '60%', marginLeft: 10 }}
-                        value={machineid} onChangeText={(value: any) => setMachineId(value)}
+                        value={machineid} onChangeText={value => setMachineId(value)}
                     />
                 </View>
                 <Divider />
                 <View style={{ flexDirection: 'row', margin: 30 }}>
                     <TouchableOpacity onPress={() => setOpendate(true)} style={{ width: '50%' }} >
-                        <TextInput mode="flat" label="Failure Date" left={<TextInput.Icon icon="calendar-range" />} editable={false} pointerEvents="none" value={moment(date).format('YYYY-MM-DD')} onChangeText={(value: any) => setDate(value)} />
+                        <TextInput mode="flat" label="Failure Date" left={<TextInput.Icon icon="calendar-range" />} editable={false} pointerEvents="none" value={moment(date).format('YYYY-MM-DD')} onChangeText={value => setDate(value)} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setOpentime(true)} style={{ width: '50%', marginLeft: 10 }} >
                         <TextInput
                             label="Failure Time"
                             left={<TextInput.Icon icon="clock-outline" />}
-                            editable={false} pointerEvents="none" value={moment(time).format('HH:mm:ss')} onChangeText={(value: any) => setTime(value)}
+                            editable={false} pointerEvents="none" value={moment(time).format('HH:mm:ss')} onChangeText={value => setTime(value)}
                         />
                     </TouchableOpacity>
-                </View >
+                </View>
                 <Divider />
                 <View style={{ flexDirection: 'row', margin: 30 }}>
-                    <TextInput mode="flat" label="Problem" style={{ width: '100%' }} left={<TextInput.Icon icon="alert-circle-outline" />} value={problem} onChangeText={(value: any) => setProblem(value)} />
+                    <TextInput mode="flat" label="Problem" style={{ width: '100%' }} left={<TextInput.Icon icon="alert-circle-outline" />} value={problem} onChangeText={value => setProblem(value)} />
                 </View>
                 <Divider />
                 <Provider>
                     <View style={{ margin: 30, width: '85%' }}>
                         <TouchableOpacity onPress={showDialog} >
-                            <TextInput mode="flat" label="Type Problem" style={{ width: '100%' }} left={<TextInput.Icon icon="tools" />} editable={false} value={valueproblem} onChangeText={(value: any) => setValueProblem(value)} />
+                            <TextInput mode="flat" label="Type Problem" style={{ width: '100%' }} left={<TextInput.Icon icon="tools" />} editable={false} value={valueproblem} onChangeText={value => setValueProblem(value)} />
                         </TouchableOpacity>
                         <Portal>
                             <Dialog visible={visibleproblem} onDismiss={hideDialog}>
@@ -203,7 +162,7 @@ export function InputWrScreen({ navigation }: any) {
                 <Provider>
                     <View style={{ margin: 30, width: '85%' }}>
                         <TouchableOpacity onPress={showDialogUrgency} >
-                            <TextInput mode="flat" label="Type Urgency" style={{ width: '100%' }} left={<TextInput.Icon icon="tools" />} editable={false} value={valueurgency} onChangeText={(value: any) => setValueUrgency(value)} />
+                            <TextInput mode="flat" label="Type Urgency" style={{ width: '100%' }} left={<TextInput.Icon icon="tools" />} editable={false} value={valueurgency} onChangeText={value => setValueUrgency(value)} />
                         </TouchableOpacity>
                         <Portal>
                             <Dialog visible={visibleurgency} onDismiss={hideDialogUrgency}>
@@ -264,7 +223,7 @@ export function InputWrScreen({ navigation }: any) {
                         setOpentime(false)
                     }}
                 />
-                <Text>Ini Data </Text>
+                <Text>Ini Data {users.email} </Text>
 
 
             </MainContent>
