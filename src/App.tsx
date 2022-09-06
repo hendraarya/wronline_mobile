@@ -9,6 +9,11 @@ import AuthStackNavigator from './navigators/AuthStackNavigator';
 import Splashscreen from './pages/Splashscreen';
 import LoginScreen from './pages/LoginScreen';
 import RequestWrScreen from './pages/RequestWrScreen';
+import MyComponent from './pages/fabstyle';
+import { InputWrScreen } from './pages/InputWrScreen';
+import MainContainer from './components/MainContainer';
+import BarcodeScanner from './components/QRcodescanner';
+import { TimePickerExample } from './pages/TimePickerExample';
 
 
 const RootStack = createNativeStackNavigator();
@@ -28,8 +33,13 @@ export default function App() {
 
     // </View>
     // <Splashscreen />
-    <LoginScreen />
+    // <LoginScreen />
     // <RequestWrScreen />
+    // <MyComponent />
+    <InputWrScreen />
+    // <BarcodeScanner />
+    // <AxiosScreen />
+    // <TimePickerExample />
 
 
   );
