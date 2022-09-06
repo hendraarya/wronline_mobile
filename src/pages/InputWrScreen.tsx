@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Text, StyleSheet, TouchableOpacity, View } from 'react-native';
 import moment from "moment";
+import { MomentTimezone } from "moment-timezone";
 import { RadioButton, TextInput, Divider, Dialog, Portal, Provider, Button } from "react-native-paper";
 import Icon from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker'
@@ -28,9 +29,11 @@ export function InputWrScreen({ navigation }: any) {
     // Variable for get data sending Request WR Online
     const [nik, setNik] = useState('');
     const [machineid, setMachineId] = useState('');
-    const [date, setDate] = useState(new Date());
+    const [date3, setDate3] = useState(new Date());
+    const [date2, setDate2] = useState('2022-07-12');
     const [opendate, setOpendate] = useState(false);
-    const [time, setTime] = useState(new Date());
+    const [time3, setTime3] = useState(new Date());
+    const [time2, setTime2] = useState('13:30');
     const [opentime, setOpentime] = useState(false);
     const [problem, setProblem] = useState('');
     const [valueproblem, setValueProblem] = React.useState('');
@@ -42,100 +45,64 @@ export function InputWrScreen({ navigation }: any) {
     const showDialogUrgency = () => setVisibleUrgency(true);
     const hideDialogUrgency = () => setVisibleUrgency(false);
 
-    const [users, setUsers] = useState<any>([]);
+    interface Provider {
+        email: string,
+        id: number,
+        name: string,
+        password: string,
+        profile_picture: string
+    };
+    const [users, setUsers] = useState<Provider[]>([]);
 
     //Access Function use Context(Variable Global)
-    // const { sendwr } = useContext(WROnlineContext);
+    const { sendwr } = useContext(WROnlineContext);
+
+    moment.locale('')
+    const [timezone, setTimeZone] = useState(moment().format('HH:mm:ss'));
 
     //Function Submit WR Online
     const submitwronline = () => {
         const data = {
             snik: nik,
             smach: machineid,
-            // drepair: date,
-            // trepair: time,
-            // sproblem: problem,
-            // stype: valueproblem,
-            // surgency: valueurgency,
+            drepair: date3,
+            trepair: time3,
+            sproblem: problem,
+            stype: valueproblem,
+            surgency: valueurgency,
         };
         axios
-            .post(
-                'http://10.202.10.42:3000/api/getnikname',
-                data,
-            ) /* localhost emulator harus diganti dengan ip local : 10.0.2.2, agar device tidak bingung, soalnya device use localhost */
+            .post('http://10.202.10.42:3000/api/getnikname', data)
+            /* localhost emulator harus diganti dengan ip local : 10.0.2.2, agar device tidak bingung, soalnya device use localhost */
             .then(res => {
-                console.log('res:', res);
-            });
+                // console.log('res:', res);
+                console.log('WR Berhasil Terkirim!')
+            })
+            .catch(err => {
+                console.log(err.response.data)
+            })
     }
 
-    type User = {
-        id: number,
-        name: string,
-        email: string,
+    const getData = () => {
+        axios.get('http://10.202.10.42:3000/api/mesin').then(res => {
+            // console.log('res get data:', res.data);
+            setUsers(res.data.data);
 
+        });
     };
-
-    type GetUsersResponse = {
-        data: User[];
-    };
-
-    async function getData() {
-        try {
-            // 👇️ const data: GetUsersResponse
-            const { data, status } = await axios.get<GetUsersResponse>(
-                'http://10.202.10.42:3000/api/mesin',
-                {
-                    headers: {
-                        Accept: 'application/json',
-                    },
-                },
-            );
-
-            console.log(JSON.stringify(data, null, 4));
-            setUsers(data)
-
-            // 👇️ "response status is: 200"
-            console.log('response status is: ', status);
-
-            return data;
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log('error message: ', error.message);
-                return error.message;
-            } else {
-                console.log('unexpected error: ', error);
-                return 'An unexpected error occurred';
-            }
-        }
-    }
-
-    // const getData = () => {
-    //     axios.get('http://10.202.10.42:3000/api/mesin').then(res => {
-    //         console.log('res get data:', res.data);
-    //         setUsers(res.data);
-    //     });
-    // };
-
-
-    const wronline = [
-        {
-            wrid: 'WR220818-01',
-            machine_no: 'HP-123-ID',
-            date: '2022-03-10',
-            time: '10:02:01',
-            problem: 'Mold Abnormal',
-            priority: 'Prioroty 1',
-            status: 'Received'
-        },
-    ]
-
     // useEffect(() => {
     //     Alert.alert(moment(date).format('YYYY-MM-DD'))
     // }, [date]);
 
+    var convert_string = date3.toString();
+    var split_date = convert_string.split('T');
     useEffect(() => {
         getData();
-    }, []);
+        console.log('datalength ini :', users);
+        console.log('Date Selection:', date3);
+        console.log('Time Selection:', time3);
+        console.log('Timezone saat ini:', timezone);
+    }, [date3, timezone, time3]);
 
 
     return (
@@ -150,7 +117,7 @@ export function InputWrScreen({ navigation }: any) {
             </MainHeader>
             <MainContent>
                 <View style={{ flexDirection: 'row', margin: 30 }}>
-                    <TextInput mode="flat" label="NIK" style={{ width: '40%' }} left={<TextInput.Icon icon="sticker-text-outline" value={nik} onChangeText={(value: any) => setNik(value)} />} />
+                    <TextInput mode="flat" label="NIK" style={{ width: '40%' }} left={<TextInput.Icon icon="sticker-text-outline" />} value={nik} onChangeText={(value: any) => setNik(value)} />
                     <TextInput
                         label="Machine ID"
                         left={<TextInput.Icon icon="factory" />}
@@ -161,13 +128,17 @@ export function InputWrScreen({ navigation }: any) {
                 <Divider />
                 <View style={{ flexDirection: 'row', margin: 30 }}>
                     <TouchableOpacity onPress={() => setOpendate(true)} style={{ width: '50%' }} >
-                        <TextInput mode="flat" label="Failure Date" left={<TextInput.Icon icon="calendar-range" />} editable={false} pointerEvents="none" value={moment(date).format('YYYY-MM-DD')} onChangeText={(value: any) => setDate(value)} />
+                        <TextInput label="Failure Date" left={<TextInput.Icon icon="calendar-range" />}
+                            editable={false}
+                            pointerEvents="none"
+                            value={moment(date3).format('YYYY-MM-DD')}
+                            onChangeText={(test: any) => setDate3(test)} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setOpentime(true)} style={{ width: '50%', marginLeft: 10 }} >
                         <TextInput
                             label="Failure Time"
                             left={<TextInput.Icon icon="clock-outline" />}
-                            editable={false} pointerEvents="none" value={moment(time).format('HH:mm:ss')} onChangeText={(value: any) => setTime(value)}
+                            editable={false} pointerEvents="none" value={moment(time3).format('HH:mm:ss')} onChangeText={(value: any) => setTime3(value)}
                         />
                     </TouchableOpacity>
                 </View >
@@ -233,10 +204,10 @@ export function InputWrScreen({ navigation }: any) {
                     mode="date"
                     modal
                     open={opendate}
-                    date={date}
+                    date={date3}
                     onConfirm={(date) => {
                         setOpendate(false),
-                            setDate(date)
+                            setDate3(date)
 
                     }}
                     onCancel={() => {
@@ -253,18 +224,31 @@ export function InputWrScreen({ navigation }: any) {
                     mode="time"
                     modal
                     open={opentime}
-                    date={time}
+                    date={time3}
                     is24hourSource={'device'}
                     onConfirm={(date) => {
                         setOpentime(false),
-                            setTime(date)
+                            setTime3(date)
 
                     }}
                     onCancel={() => {
                         setOpentime(false)
                     }}
                 />
-                <Text>Ini Data </Text>
+
+                {/* {
+
+                    users.map((value, index) => {
+                        return (
+                            <View key={index}>
+                                <Text>{value.id}</Text>
+                                <Text>{value.name}</Text>
+                            </View>
+                        );
+                    })
+
+                } */}
+
 
 
             </MainContent>
