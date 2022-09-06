@@ -42,7 +42,7 @@ export function InputWrScreen({ navigation }: any) {
     const showDialogUrgency = () => setVisibleUrgency(true);
     const hideDialogUrgency = () => setVisibleUrgency(false);
 
-    const [users, setUsers] = useState<any>([]);
+    const [users, setUsers] = useState<Array<any>>([]);
 
     //Access Function use Context(Variable Global)
     // const { sendwr } = useContext(WROnlineContext);
@@ -68,53 +68,54 @@ export function InputWrScreen({ navigation }: any) {
             });
     }
 
-    type User = {
-        id: number,
-        name: string,
-        email: string,
+    // type User = {
+    //     id: number,
+    //     name: string,
+    //     email: string,
 
-    };
-
-    type GetUsersResponse = {
-        data: User[];
-    };
-
-    async function getData() {
-        try {
-            // 👇️ const data: GetUsersResponse
-            const { data, status } = await axios.get<GetUsersResponse>(
-                'http://10.202.10.42:3000/api/mesin',
-                {
-                    headers: {
-                        Accept: 'application/json',
-                    },
-                },
-            );
-
-            console.log(JSON.stringify(data, null, 4));
-            setUsers(data)
-
-            // 👇️ "response status is: 200"
-            console.log('response status is: ', status);
-
-            return data;
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log('error message: ', error.message);
-                return error.message;
-            } else {
-                console.log('unexpected error: ', error);
-                return 'An unexpected error occurred';
-            }
-        }
-    }
-
-    // const getData = () => {
-    //     axios.get('http://10.202.10.42:3000/api/mesin').then(res => {
-    //         console.log('res get data:', res.data);
-    //         setUsers(res.data);
-    //     });
     // };
+
+    // type GetUsersResponse = {
+    //     data: User[];
+    // };
+
+    // async function getData() {
+    //     try {
+    //         // 👇️ const data: GetUsersResponse
+    //         const { data, status } = await axios.get<GetUsersResponse>(
+    //             'http://10.202.10.42:3000/api/mesin',
+    //             {
+    //                 headers: {
+    //                     Accept: 'application/json',
+    //                 },
+    //             },
+    //         );
+
+    //         console.log(JSON.stringify(data, null, 4));
+    //         setUsers(data)
+
+    //         // 👇️ "response status is: 200"
+    //         console.log('response status is: ', status);
+
+    //         return data;
+    //     } catch (error) {
+    //         if (axios.isAxiosError(error)) {
+    //             console.log('error message: ', error.message);
+    //             return error.message;
+    //         } else {
+    //             console.log('unexpected error: ', error);
+    //             return 'An unexpected error occurred';
+    //         }
+    //     }
+    // }
+
+    const getData = () => {
+        axios.get('http://10.202.10.42:3000/api/mesin').then(res => {
+            // console.log('res get data:', res.data);
+            setUsers(res.data);
+
+        });
+    };
 
 
     const wronline = [
@@ -135,7 +136,9 @@ export function InputWrScreen({ navigation }: any) {
 
     useEffect(() => {
         getData();
-    }, []);
+        console.log('datausestate', typeof (users));
+        // console.log('datalength ini :', users.length);
+    }, [users]);
 
 
     return (
@@ -264,7 +267,7 @@ export function InputWrScreen({ navigation }: any) {
                         setOpentime(false)
                     }}
                 />
-                <Text>Ini Data </Text>
+                <Text>Ini Data  </Text>
 
 
             </MainContent>
