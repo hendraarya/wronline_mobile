@@ -13,7 +13,7 @@ import MyComponent from './pages/fabstyle';
 import { InputWrScreen } from './pages/InputWrScreen';
 import MainContainer from './components/MainContainer';
 import BarcodeScanner from './components/QRcodescanner';
-import { AxiosScreen } from './pages/AxiosScreen';
+import { TimePickerExample } from './pages/TimePickerExample';
 
 
 const RootStack = createNativeStackNavigator();
@@ -39,6 +39,7 @@ export default function App() {
     <InputWrScreen />
     // <BarcodeScanner />
     // <AxiosScreen />
+    // <TimePickerExample />
 
 
   );
