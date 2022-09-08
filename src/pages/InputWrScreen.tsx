@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Text, StyleSheet, TouchableOpacity, View } from 'react-native';
 import moment from "moment";
-import { MomentTimezone } from "moment-timezone";
 import { RadioButton, TextInput, Divider, Dialog, Portal, Provider, Button } from "react-native-paper";
 import Icon from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker'
@@ -25,15 +24,14 @@ import { RNCamera } from 'react-native-camera';
 
 
 
-export function InputWrScreen({ navigation }: any) {
+export default function InputWrScreen({ navigation }: any) {
+
     // Variable for get data sending Request WR Online
     const [nik, setNik] = useState('');
     const [machineid, setMachineId] = useState('');
     const [date3, setDate3] = useState(new Date());
-    const [date2, setDate2] = useState('2022-07-12');
     const [opendate, setOpendate] = useState(false);
     const [time3, setTime3] = useState(new Date());
-    const [time2, setTime2] = useState('13:30');
     const [opentime, setOpentime] = useState(false);
     const [problem, setProblem] = useState('');
     const [valueproblem, setValueProblem] = React.useState('');
@@ -44,6 +42,7 @@ export function InputWrScreen({ navigation }: any) {
     const [visibleurgency, setVisibleUrgency] = React.useState(false);
     const showDialogUrgency = () => setVisibleUrgency(true);
     const hideDialogUrgency = () => setVisibleUrgency(false);
+    const [error, setError] = React.useState('');
 
     interface Provider {
         email: string,
@@ -55,28 +54,30 @@ export function InputWrScreen({ navigation }: any) {
     const [users, setUsers] = useState<Provider[]>([]);
 
     //Access Function use Context(Variable Global)
-    const { sendwr } = useContext(WROnlineContext);
+    const { sendwr } = React.useContext(WROnlineContext);
 
-    moment.locale('')
-    const [timezone, setTimeZone] = useState(moment().format('HH:mm:ss'));
+    const backmenu = () => {
+        navigation.pop();
+    }
 
     //Function Submit WR Online
     const submitwronline = () => {
         const data = {
             snik: nik,
-            smach: machineid,
-            drepair: date3,
-            trepair: time3,
-            sproblem: problem,
-            stype: valueproblem,
-            surgency: valueurgency,
+            smach: machineid.toUpperCase(),
+            drepair: convertmoment_date,
+            trepair: convertmoment_time,
+            sproblem: problem.toUpperCase(),
+            stype: valueproblem.toUpperCase(),
+            surgency: valueurgency.toUpperCase(),
         };
         axios
             .post('http://10.202.10.42:3000/api/getnikname', data)
             /* localhost emulator harus diganti dengan ip local : 10.0.2.2, agar device tidak bingung, soalnya device use localhost */
             .then(res => {
                 // console.log('res:', res);
-                console.log('WR Berhasil Terkirim!')
+                console.log('WR Berhasil Terkirim!');
+                navigation.pop();
             })
             .catch(err => {
                 console.log(err.response.data)
@@ -90,27 +91,27 @@ export function InputWrScreen({ navigation }: any) {
 
         });
     };
-    // useEffect(() => {
-    //     Alert.alert(moment(date).format('YYYY-MM-DD'))
-    // }, [date]);
 
-    var convert_string = date3.toString();
-    var split_date = convert_string.split('T');
+    // convert data date & time use moment js
+    var convertmoment_date = moment(new Date(date3)).format('YYYY-MM-DD');
+    var convertmoment_time = moment(new Date(time3)).format('HH:mm:ss');
+
     useEffect(() => {
         getData();
         console.log('datalength ini :', users);
         console.log('Date Selection:', date3);
         console.log('Time Selection:', time3);
-        console.log('Timezone saat ini:', timezone);
-    }, [date3, timezone, time3]);
+        console.log('Date Convert Momentjs:', convertmoment_date);
+        console.log('Time Convert Momentjs:', convertmoment_time);
+    }, [date3, time3, convertmoment_date, convertmoment_time]);
 
 
     return (
         <MainContainer>
             <MainHeader>
                 <View style={styles.mainheader}>
-                    <TouchableOpacity>
-                        <Icon name="md-arrow-back-outline" size={30} color={'white'} style={{ margin: 17 }} />
+                    <TouchableOpacity >
+                        <Icon name="md-arrow-back-outline" size={30} color={'white'} style={{ margin: 17 }} onPress={backmenu} />
                     </TouchableOpacity>
                     <Text style={styles.text}>Request WR Online</Text>
                 </View>
@@ -131,14 +132,14 @@ export function InputWrScreen({ navigation }: any) {
                         <TextInput label="Failure Date" left={<TextInput.Icon icon="calendar-range" />}
                             editable={false}
                             pointerEvents="none"
-                            value={moment(date3).format('YYYY-MM-DD')}
-                            onChangeText={(test: any) => setDate3(test)} />
+                            value={moment(new Date(date3)).format('YYYY-MM-DD')}
+                            onChangeText={(value: any) => setDate3(value)} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setOpentime(true)} style={{ width: '50%', marginLeft: 10 }} >
                         <TextInput
                             label="Failure Time"
                             left={<TextInput.Icon icon="clock-outline" />}
-                            editable={false} pointerEvents="none" value={moment(time3).format('HH:mm:ss')} onChangeText={(value: any) => setTime3(value)}
+                            editable={false} pointerEvents="none" value={moment(new Date(time3)).format('HH:mm:ss')} onChangeText={(value: any) => setTime3(value)}
                         />
                     </TouchableOpacity>
                 </View >
@@ -254,6 +255,24 @@ export function InputWrScreen({ navigation }: any) {
             </MainContent>
             <MainFooter>
                 <FilledButton title="Send WR to Maintenance" style={styles.button} onPress={submitwronline} />
+                {/* async () => {
+                    const data = {
+                    snik: nik,
+                smach: machineid,
+                drepair: convertmoment_date,
+                trepair: convertmoment_time,
+                sproblem: problem,
+                stype: valueproblem,
+                surgency: valueurgency,
+                    };
+                try {
+                    await sendwr(data);
+                navigation.pop();
+
+                    } catch (e) {
+                    // setError(e.message);   
+                }
+                } */}
             </MainFooter>
         </MainContainer>
 

@@ -2,10 +2,20 @@ import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { StackActions } from '@react-navigation/native';
 
-class Splashscreen extends Component {
+interface Props {
+  navigation: any
+}
+
+class SplashScreen extends Component<Props> {
   constructor(props: any) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.navigation.dispatch(StackActions.replace('Login'));
+    }, 3000);
   }
   render() {
     return (
@@ -22,7 +32,7 @@ class Splashscreen extends Component {
     );
   }
 }
-export default Splashscreen;
+export default SplashScreen;
 
 const styles = StyleSheet.create({
   container: {

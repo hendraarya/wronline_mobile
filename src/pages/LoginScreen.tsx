@@ -4,7 +4,9 @@ import { StyleSheet, View, Text, Image } from "react-native";
 import { FilledButton } from "../components/FilledButton";
 import Input from "../components/Input";
 
-export default function LoginScreen() {
+import { useNavigation } from "@react-navigation/native";
+export default function LoginScreen({ navigation }: any) {
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -13,7 +15,7 @@ export default function LoginScreen() {
             <View style={styles.content}>
                 <Input placeholder="Username" style={styles.input} />
                 <Input placeholder="Password" style={styles.input} />
-                <FilledButton title='Masuk' style={styles.button} />
+                <FilledButton title='Masuk' style={styles.button} onPress={() => navigation.navigate('RequestWr')} />
             </View>
             <View style={styles.footer}>
                 <Text style={styles.text1}> ────────────────   ©2022  ────────────────</Text>

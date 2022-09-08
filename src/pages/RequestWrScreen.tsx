@@ -81,7 +81,7 @@ export default function RequestWrScreen({ animatedValue,
     label,
     animateFrom,
     style,
-    iconMode, }: any) {
+    iconMode, navigation }: any) {
     const [page, setPage] = React.useState<number>(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
 
@@ -159,7 +159,7 @@ export default function RequestWrScreen({ animatedValue,
                     icon={'plus'}
                     label={'Input WR Online'}
                     extended={isExtended}
-                    onPress={() => console.log('Pressed')}
+                    onPress={() => navigation.navigate('InputWr')}
                     visible={visible}
                     animateFrom={'right'}
                     iconMode={'static'}

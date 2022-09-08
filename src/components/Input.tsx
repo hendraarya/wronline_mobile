@@ -13,7 +13,7 @@ export default function Input({ style, ...props }: any) {
 const styles = StyleSheet.create({
     columnBox: {
         backgroundColor: '#e8e8e8',
-        width: '100%',
+        width: '95%',
         padding: 20,
         borderRadius: 8,
         margin: 10,
