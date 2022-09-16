@@ -72,7 +72,7 @@ export default function InputWrScreen({ navigation }: any) {
             surgency: valueurgency.toUpperCase(),
         };
         axios
-            .post('http://10.202.10.42:3000/api/getnikname', data)
+            .post('http://10.202.10.77:3000/api/getnikname', data)
             /* localhost emulator harus diganti dengan ip local : 10.0.2.2, agar device tidak bingung, soalnya device use localhost */
             .then(res => {
                 // console.log('res:', res);
@@ -85,7 +85,7 @@ export default function InputWrScreen({ navigation }: any) {
     }
 
     const getData = () => {
-        axios.get('http://10.202.10.42:3000/api/mesin').then(res => {
+        axios.get('http://10.202.10.77:3000/api/mesin').then(res => {
             // console.log('res get data:', res.data);
             setUsers(res.data.data);
 

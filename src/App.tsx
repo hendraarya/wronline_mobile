@@ -50,10 +50,26 @@ export default function App() {
 
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="RequestWr" component={RequestWrScreen} />
-        <Stack.Screen name="InputWr" component={InputWrScreen} />
+
+        <Stack.Screen name="Splash">
+          {(props) => <SplashScreen {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="Login">
+          {(props) => <LoginScreen {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="RequestWr">
+          {(props) => <RequestWrScreen {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="InputWr">
+          {(props) => <InputWrScreen {...props} />}
+        </Stack.Screen>
+
+        {/* Menggunakan penulisan stack screen seperti dibawah ini akan menyebabkan muncul Warning "React Component must start with Upper Letter" */}
+        {/* <Stack.Screen name="Splash" component={SplashScreen} /> */}
+        {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
+        {/* <Stack.Screen name="RequestWr" component={RequestWrScreen} /> */}
+        {/* <Stack.Screen name="InputWr" component={InputWrScreen} /> */}
+
       </Stack.Navigator>
     </NavigationContainer>
 

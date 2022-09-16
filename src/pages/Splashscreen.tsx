@@ -19,14 +19,14 @@ class SplashScreen extends Component<Props> {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={Styles.container}>
 
-        <View style={styles.flex1}>
+        <View style={Styles.flex1}>
           <Image source={require('../assets/images/logonmaxsmall2.png')} />
         </View>
-        <View style={styles.flex2}>
-          <Text style={styles.text1}>Powered By | Version 1.0 </Text>
-          <Text style={styles.text2}>Technology Control ©2022</Text>
+        <View style={Styles.flex2}>
+          <Text style={Styles.text1}>Powered By | Version 1.0 </Text>
+          <Text style={Styles.text2}>Technology Control ©2022</Text>
         </View>
       </View>
     );
@@ -34,7 +34,7 @@ class SplashScreen extends Component<Props> {
 }
 export default SplashScreen;
 
-const styles = StyleSheet.create({
+const Styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
